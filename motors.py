@@ -18,16 +18,16 @@ class Motor():
         # Current motor position
         position = self.position
         
-        delta = target_position - position
-        
-        # Determines the direction motor needs to go
-        if delta > self.steps_per_rev/2:
-            direction = "CCW"
-        elif delta > -self.steps_per_rev/2 and delta < 0:
-            direction = "CCW"
-        else:
+        # Calculates number of steps in cw and ccw directions
+        cw_delta = (target_position - position) % self.steps_per_rev
+        ccw_delta = (position - target_position) % self.steps_per_rev
+
+        # Chooses direction which has fewer steps
+        if cw_delta <= ccw_delta:
             direction = "CW"
-        
+        else:
+            direction = "CCW"
+
         # Moves the motor in either direction until meets the target position
         while position != target_position:
             if direction == "CW":
@@ -61,7 +61,6 @@ class Motor():
         self.move(self.round_to_steps(angle))
         
     # Rounds degree to nearest step
-    def round_to_steps(self, raw_angle):
-        
+    def round_to_steps(self, raw_angle):       
         deg_per_step = 360/self.steps_per_rev
         return round(raw_angle/deg_per_step)

@@ -27,31 +27,34 @@ alt_motor = motors.Motor("Alt Motor", alt_motor_pins, int(positions[1]), 2048)
 
 initial_time = astropy.time.Time(datetime.datetime.now(tz=datetime.timezone.utc))
 my_position = coords.TerrestrialPosition("Earth", initial_time, "Chicago")
+sun_position = coords.CelestialPosition("Sun", initial_time, "sun")
 moon_position = coords.CelestialPosition("Moon", initial_time, "moon")
+mercury_position = coords.CelestialPosition("Mercury", initial_time, "mercury")
+venus_position = coords.CelestialPosition("Venus", initial_time, "venus")
 mars_position = coords.CelestialPosition("Mars", initial_time, "mars")
+jupiter_position = coords.CelestialPosition("Jupiter", initial_time, "jupiter")
+saturn_position = coords.CelestialPosition("Saturn", initial_time, "saturn")
 uranus_position = coords.CelestialPosition("Uranus", initial_time, "uranus")
+neptune_position = coords.CelestialPosition("Neptune", initial_time, "neptune")
 
 real_run = True
+
+body_position = sun_position
 
 while real_run == True:
     iteration_time = astropy.time.Time(datetime.datetime.now(tz=datetime.timezone.utc))
     
     my_position.update(iteration_time)
-    moon_position.update(iteration_time)
-    uranus_position.update(iteration_time)
-    mars_position.update(iteration_time)
+    body_position.update(iteration_time)
     
-    # azimuth, altitude = my_position.get_az_alt(moon_position)
-    # altitude = -altitude
-    azimuth, altitude = my_position.get_az_alt(uranus_position)
-    # azimuth, altitude = my_position.get_az_alt(mars_position)
+    azimuth, altitude = my_position.get_az_alt(body_position)
     
     print(f"Azimuth: {azimuth}")
     print(f"Altitude: {altitude}")
     
     try:
         az_motor.move_to_angle(azimuth)
-        alt_motor.move_to_angle(altitude)
+        alt_motor.move_to_angle(-altitude)
     except KeyboardInterrupt:   
         with open("positions.txt", "w") as f:
             f.write(str(az_motor.position))

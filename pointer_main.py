@@ -9,7 +9,7 @@ import astropy.time
 
 azPosition = 0
 altPosition = 0
-location = "Chicago"
+location = "West Lafayette"
 
 duration = 0.01
 
@@ -41,9 +41,9 @@ while real_run == True:
     uranus_position.update(iteration_time)
     mars_position.update(iteration_time)
     
-    azimuth, altitude = my_position.get_az_alt(moon_position)
-    altitude = -altitude
-    # azimuth, altitude = my_position.get_az_alt(uranus_position)
+    # azimuth, altitude = my_position.get_az_alt(moon_position)
+    # altitude = -altitude
+    azimuth, altitude = my_position.get_az_alt(uranus_position)
     # azimuth, altitude = my_position.get_az_alt(mars_position)
     
     print(f"Azimuth: {azimuth}")

@@ -26,22 +26,17 @@ alt_motor = motors.Motor("Alt Motor", alt_motor_pins, int(positions[1]), 2048)
 
 
 initial_time = astropy.time.Time(datetime.datetime.now(tz=datetime.timezone.utc))
+
 my_position = coords.TerrestrialPosition("Earth", initial_time, "Chicago")
-sun_position = coords.CelestialPosition("Sun", initial_time, "sun")
-moon_position = coords.CelestialPosition("Moon", initial_time, "moon")
-mercury_position = coords.CelestialPosition("Mercury", initial_time, "mercury")
-venus_position = coords.CelestialPosition("Venus", initial_time, "venus")
-mars_position = coords.CelestialPosition("Mars", initial_time, "mars")
-jupiter_position = coords.CelestialPosition("Jupiter", initial_time, "jupiter")
-saturn_position = coords.CelestialPosition("Saturn", initial_time, "saturn")
-uranus_position = coords.CelestialPosition("Uranus", initial_time, "uranus")
-neptune_position = coords.CelestialPosition("Neptune", initial_time, "neptune")
 
-real_run = True
+body_names = ["sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune"]
+positions = {}
+for body in body_names:
+    positions[body] = coords.CelestialPosition(body, initial_time, body)
 
-body_position = sun_position
+body_position = positions["jupiter"]
 
-while real_run == True:
+while True:
     iteration_time = astropy.time.Time(datetime.datetime.now(tz=datetime.timezone.utc))
     
     my_position.update(iteration_time)

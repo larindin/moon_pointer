@@ -6,12 +6,12 @@ m_per_au = 149597870700
 
 class Position():
     
-    def __init__(self, label, time):
+    def __init__(self, label:str, time:astropy.time.Time):
         
         self.label = label
         self.time = time
         
-    def get_xyz_coords(self, time):
+    def get_xyz_coords(self) -> np.array:
         
         x = self.gcrs_coords[0] * np.cos(self.gcrs_coords[1]) * np.cos(self.gcrs_coords[2])
         y = self.gcrs_coords[0] * np.cos(self.gcrs_coords[1]) * np.sin(self.gcrs_coords[2])
@@ -21,9 +21,9 @@ class Position():
     
     def update_xyz_coords(self):
         
-        self.xyz_coords = self.get_xyz_coords(self.time)
+        self.xyz_coords = self.get_xyz_coords()
     
-    def update(self, time):
+    def update(self, time:astropy.time.Time):
         self.time = time
         
         self.update_gcrs_coords()
@@ -31,7 +31,7 @@ class Position():
         
 class CelestialPosition(Position):
     
-    def __init__(self, label, time, body):
+    def __init__(self, label:str, time:astropy.time.Time, body:str):
         
         self.body = body
         super().__init__(label, time)
@@ -39,7 +39,7 @@ class CelestialPosition(Position):
         self.update_gcrs_coords()
         super().update_xyz_coords()
       
-    def get_gcrs_coords(self, time):
+    def get_gcrs_coords(self, time:astropy.time.Time) -> np.array:
         
         gcrs_coords = astropy.coordinates.get_body(body=self.body, time=time)  
         return np.array([gcrs_coords.distance.value, gcrs_coords.dec.rad, gcrs_coords.ra.rad])
@@ -51,7 +51,7 @@ class CelestialPosition(Position):
 
 class TerrestrialPosition(Position):
     
-    def __init__(self, label, time, location_name):
+    def __init__(self, label:str, time:astropy.time.Time, location_name:str):
         super().__init__(label, time)
         
         geoloc = geopy.geocoders.Nominatim(user_agent="GetLoc").geocode(location_name)
@@ -61,7 +61,7 @@ class TerrestrialPosition(Position):
         super().update_xyz_coords()
         
     
-    def get_gcrs_coords(self, time):
+    def get_gcrs_coords(self, time:astropy.time.Time) -> np.array:
         
         gcrs_coords = self.loc.get_gcrs(time)
     
@@ -71,7 +71,7 @@ class TerrestrialPosition(Position):
         
         self.gcrs_coords = self.get_gcrs_coords(self.time)
     
-    def get_azimuth_0(self):
+    def get_azimuth_0(self) -> np.array:
         '''
         Returns
         -------
@@ -86,7 +86,7 @@ class TerrestrialPosition(Position):
         
         return np.array([x, y, z])
     
-    def get_az_alt_rad(self, to_position):
+    def get_az_alt_rad(self, to_position:Position) -> tuple:
         
         # Creates and normalizes vector from observation to target
         view_vector = to_position.xyz_coords - self.xyz_coords
@@ -121,7 +121,7 @@ class TerrestrialPosition(Position):
                
         return azimuth, altitude
     
-    def get_az_alt(self, to_position):
+    def get_az_alt(self, to_position:Position) -> tuple:
         
         azimuth, altitude = self.get_az_alt_rad(to_position)
         return np.degrees(azimuth), np.degrees(altitude)

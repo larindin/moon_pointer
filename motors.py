@@ -49,8 +49,6 @@ class Motor():
     def move(self, steps):
         print(steps)
         self.move_to(self.position + steps)
-        
-        return 0
                
     # Moves motor from its current angle to target angle
     def move_to_angle(self, target_angle):
@@ -61,6 +59,6 @@ class Motor():
         self.move(self.round_to_steps(angle))
         
     # Rounds degree to nearest step
-    def round_to_steps(self, raw_angle):       
+    def round_to_steps(self, raw_angle) -> int:
         deg_per_step = 360/self.steps_per_rev
         return round(raw_angle/deg_per_step)

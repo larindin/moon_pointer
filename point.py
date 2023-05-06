@@ -26,7 +26,6 @@ def point(target_body:str):
     az_motor = motors.Motor("Az Motor", az_motor_pins, int(positions[0]), 2048)
     alt_motor = motors.Motor("Alt Motor", alt_motor_pins, int(positions[1]), 2048)
 
-
     initial_time = astropy.time.Time(datetime.datetime.now(tz=datetime.timezone.utc))
 
     my_position = coords.TerrestrialPosition("Earth", initial_time, "Chicago")
@@ -40,8 +39,8 @@ def point(target_body:str):
         
         azimuth, altitude = my_position.get_az_alt(body_position)
         
-        print(f"Azimuth: {azimuth}")
-        print(f"Altitude: {altitude}")
+        print(f"Azimuth: {azimuth:.3f}")
+        print(f"Altitude: {altitude:.3f}")
         
         try:
             az_motor.move_to_angle(azimuth)

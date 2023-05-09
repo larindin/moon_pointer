@@ -1,14 +1,14 @@
 import time
-from pymata4 import pymata4
+from telemetrix import telemetrix
+import adafruit_lis2mdl
 
-board = pymata4.Pymata4(arduino_wait=10)
+board = telemetrix.Telemetrix()
 
-magnetometer = board.digital[18]
-magnetometer.enable_reporting()
-
-it = pyfirmata.util.Iterator(board)
-it.start()
+board.set
 
 while True:
-    print(magnetometer.read())
-    time.sleep(0.1)
+    mag_x, mag_y, mag_z = sensor.magnetic
+
+    print("X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} uT".format(mag_x, mag_y, mag_z))
+    print("")
+    time.sleep(1.0)

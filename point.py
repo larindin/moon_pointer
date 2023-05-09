@@ -1,30 +1,37 @@
 import datetime
 import time
-import pyfirmata
 import sys
+import astropy.time
+from telemetrix import telemetrix
 
 import coords
 import motors
-import astropy.time
+
 
 def point(target_body:str):    
 
     azPosition = 0
     altPosition = 0
-    location = "West Lafayette"
+    location = "Chicago"
 
     duration = 0.01
 
-    board = pyfirmata.Arduino("COM5")
+    board = telemetrix.Telemetrix()
 
     with open("positions.txt", "r") as f:
         positions = f.read().split("\n")
 
-    az_motor_pins = [board.digital[9], board.digital[10], board.digital[11], board.digital[12]]
-    alt_motor_pins = [board.digital[5], board.digital[6], board.digital[7], board.digital[8]]
+    # az_motor_pins = [board.digital[9], board.digital[10], board.digital[11], board.digital[12]]
+    # alt_motor_pins = [board.digital[5], board.digital[6], board.digital[7], board.digital[8]]
 
-    az_motor = motors.Motor("Az Motor", az_motor_pins, int(positions[0]), 2048)
-    alt_motor = motors.Motor("Alt Motor", alt_motor_pins, int(positions[1]), 2048)
+    az_motor_pins = [9, 10, 11, 12]
+    alt_motor_pins = [5, 6, 7, 8]
+
+    for pin in az_motor_pins + alt_motor_pins:
+        board.set_pin_mode_digital_output(pin)
+
+    az_motor = motors.Motor("Az Motor", board, az_motor_pins, int(positions[0]), 2048)
+    alt_motor = motors.Motor("Alt Motor", board, alt_motor_pins, int(positions[1]), 2048)
 
     initial_time = astropy.time.Time(datetime.datetime.now(tz=datetime.timezone.utc))
 
@@ -52,9 +59,9 @@ def point(target_body:str):
                 f.write(str(alt_motor.position))
                 
                 for pin in az_motor.pins:
-                    pin.write(0)
+                    board.digital_write(pin, 0)
                 for pin in alt_motor.pins:
-                    pin.write(0)
+                    board.digital_write(pin, 0)
                 
                 sys.exit()
         

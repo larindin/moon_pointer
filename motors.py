@@ -1,9 +1,11 @@
 import time
+from telemetrix import telemetrix
 
 class Motor():
     
-    def __init__(self, label, pins, position, steps_per_rev):
+    def __init__(self, label:str, board:telemetrix.Telemetrix, pins:list, position:int, steps_per_rev:int):
         self.label = label
+        self.board = board
         self.pins = pins
         self.position = position
         self.steps_per_rev = steps_per_rev
@@ -32,15 +34,15 @@ class Motor():
         while position != target_position:
             if direction == "CW":
                 next_activated = (position + 1) % 4
-                self.pins[next_activated].write(1)
+                self.board.digital_write(self.pins[next_activated], 1)
                 time.sleep(0.005)
-                self.pins[next_activated].write(0)
+                self.board.digital_write(self.pins[next_activated], 0)
                 position = (position + 1) % self.steps_per_rev
             elif direction == "CCW":
                 next_activated = (position - 1) % 4
-                self.pins[next_activated].write(1)
+                self.board.digital_write(self.pins[next_activated], 1)
                 time.sleep(0.005)
-                self.pins[next_activated].write(0)
+                self.board.digital_write(self.pins[next_activated], 0)
                 position = (position - 1) % self.steps_per_rev
 
         self.position = position

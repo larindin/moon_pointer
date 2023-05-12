@@ -2,13 +2,19 @@ import time
 from telemetrix import telemetrix
 import adafruit_lis2mdl
 
+def the_callback(data):
+    """
+
+    :param data: [pin_type, Device address, device read register, x data pair, y data pair, z data pair]
+    :return:
+    """
+    print(type(data))
+    print(data)
+
+
 board = telemetrix.Telemetrix()
 
-board.set
+board.set_pin_mode_i2c()
 
-while True:
-    mag_x, mag_y, mag_z = sensor.magnetic
-
-    print("X:{0:10.2f}, Y:{1:10.2f}, Z:{2:10.2f} uT".format(mag_x, mag_y, mag_z))
-    print("")
-    time.sleep(1.0)
+board.i2c_write(29, [])
+board.i2c_read()

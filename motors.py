@@ -1,7 +1,7 @@
 import time
 from telemetrix import telemetrix
 
-class Motor():
+class Motor:
     
     def __init__(self, label:str, board:telemetrix.Telemetrix, pins:list, position:int, steps_per_rev:int):
         self.label = label
